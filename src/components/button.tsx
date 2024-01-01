@@ -80,11 +80,11 @@ const Button = ({ socket, roomId }: any) => {
 		<div className="h-screen w-screen flex justify-center items-center flex-col">
 			{/* <Cronometer></Cronometer> */}
 			{turn ? (
-				<Countdown date={Date.now() + 6000} onComplete={(e) => {
+				<Countdown date={Date.now() + 60000} onComplete={(e) => {
 					sendData(e);
 					// const audio = new Audio('src.mp3');
 					// audio.play();
-					play()
+					play();
 				}} className="text-white text-2xl mb-5" />
 			) : (
 					<>
