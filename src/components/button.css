@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.box-shadow-bottom-red {
+	box-shadow: 0 20px 0 red;
+}
+
+.box-shadow-bottom-green {
+	box-shadow: 0 20px 0 green;
+}
+
+.box-shadow-bottom-blue {
+	box-shadow: 0 20px 0 blue;
+}
+
+.box-shadow-bottom-none {
+	box-shadow: none;
+}

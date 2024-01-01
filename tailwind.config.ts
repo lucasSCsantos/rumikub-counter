@@ -15,6 +15,28 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        ".box-shadow-bottom-red": {
+          boxShadow: "0 20px 0 red",
+        },
+
+        ".box-shadow-bottom-green": {
+          boxShadow: "0 20px 0 green",
+        },
+
+        ".box-shadow-bottom-blue": {
+          boxShadow: "0 20px 0 blue",
+        },
+
+        ".box-shadow-bottom-none": {
+          boxShadow: "none",
+        }
+      }
+
+      addUtilities(newUtilities, ['responsive', 'active']);
+    }
+  ],
 }
 export default config
