@@ -5,14 +5,13 @@ import Countdown, { CountdownTimeDelta } from "react-countdown";
 
 interface IMsgDataTypes {
 	roomId: String | number;
-	user: String;
 	msg: String;
 	time: String;
 	start: boolean;
 	number: Number;
 }
 
-const Button = ({ socket, username, roomId }: any) => {
+const Button = ({ socket, roomId }: any) => {
 	const [currentMsg, setCurrentMsg] = useState("");
 	const [chat, setChat] = useState<IMsgDataTypes[]>([]);
 	const [number, setNumber] = useState<number>(0);
@@ -20,13 +19,11 @@ const Button = ({ socket, username, roomId }: any) => {
 	const [start, setStart] = useState<boolean>(false);
 
 	const colors = ["gray", "green", "red", "blue"]
-	// const bgColors = ["bg-gray-500", "bg-green-500", "bg-red-500", "bg-blue-500"]
 
 	const sendData = async (e: React.MouseEvent | CountdownTimeDelta) => {
 		// e.preventDefault();
 			const msgData: IMsgDataTypes = {
 				roomId,
-				user: username,
 				msg: "butao pressionado",
 				number,
 				start,
@@ -36,6 +33,7 @@ const Button = ({ socket, username, roomId }: any) => {
 					new Date(Date.now()).getMinutes(),
 			};
 		setTurn(false);
+		setStart(false);
 		await socket.emit("press_btn", msgData);
 		
 	};

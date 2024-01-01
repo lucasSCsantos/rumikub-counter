@@ -7,7 +7,6 @@ import Button from "@/components/button";
 
 export default function Home() {
   const [showChat, setShowChat] = useState(false);
-  const [userName, setUserName] = useState("");
   const [showSpinner, setShowSpinner] = useState(false);
   const [roomId, setroomId] = useState("");
 
@@ -15,8 +14,7 @@ export default function Home() {
   socket = io("http://localhost:3001");
 
   const handleJoin = () => {
-    if (userName !== "" && roomId !== "") {
-      console.log(userName, "userName", roomId, "roomId");
+    if (roomId !== "") {
       socket.emit("join_room", roomId);
       setShowSpinner(true);
       // You can remove this setTimeout and add your own logic
@@ -35,13 +33,7 @@ export default function Home() {
         className="h-screen w-screen flex justify-center items-center flex-col gap-4"
         style={{ display: showChat ? "none" : "" }}
       >
-        <input
-          className="h-8 w-60 p-1 text-black"
-          type="text"
-          placeholder="Username"
-          onChange={(e) => setUserName(e.target.value)}
-          disabled={showSpinner}
-        />
+       
         <input
           className="h-8 w-60 p-1 text-black"
           type="text"
@@ -58,7 +50,7 @@ export default function Home() {
         </button>
       </div>
       <div style={{ display: !showChat ? "none" : "" }}>
-        <Button socket={socket} roomId={roomId} username={userName} />
+        <Button socket={socket} roomId={roomId} />
         {/* <ChatPage socket={socket} roomId={roomId} username={userName} /> */}
       </div>
     </div>
