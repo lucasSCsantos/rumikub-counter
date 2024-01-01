@@ -92,7 +92,7 @@ const Button = ({ socket, roomId }: any) => {
 					</>
 					
 			)}
-			<audio ref={audioRef as React.LegacyRef<HTMLAudioElement> | undefined}>
+			<audio ref={audioRef as React.LegacyRef<HTMLAudioElement> | undefined} autoPlay>
 				<source src='src.mp3' type="audio/mp3" />
 			</audio>
 			<audio ref={audio2Ref as React.LegacyRef<HTMLAudioElement> | undefined }>
