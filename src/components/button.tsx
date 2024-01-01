@@ -84,7 +84,7 @@ const Button = ({ socket, roomId }: any) => {
 					sendData(e);
 					// const audio = new Audio('src.mp3');
 					// audio.play();
-					// play()
+					play()
 				}} className="text-white text-2xl mb-5" />
 			) : (
 					<>
@@ -101,11 +101,6 @@ const Button = ({ socket, roomId }: any) => {
 			<button disabled={!turn && !start} onClick={(e) => {
 				sendData(e);
 				play2();
-				setTimeout(() => {
-					if (turn) {
-						play();
-					}
-				}, 6000);
 			}} className={` active:mt-10 w-72 h-72 rounded-full ${turn || start ? `bg-${colors[number || 0]}-500` : `bg-${colors[0]}-500`} border-1 border-black ${turn || start ? `box-shadow-bottom-${colors[number || 0]}` : 'active:box-shadow-bottom-none' } active:box-shadow-bottom-none`}  >
 
 			</button>
