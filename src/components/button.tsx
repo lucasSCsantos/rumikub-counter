@@ -18,8 +18,8 @@ const Button = ({ socket, roomId }: any) => {
 	const [turn, setTurn] = useState<boolean>(false);
 	const [start, setStart] = useState<boolean>(false);
 
-	const audioRef = useRef();
-	const audio2Ref = useRef();
+	const audioRef = useRef<HTMLAudioElement>();
+	const audio2Ref = useRef<HTMLAudioElement>();
 
 	const colors = ["gray", "green", "red", "blue"];
 	// const bgColors = ["bg-gray-500", "bg-green-500", "bg-red-500", "bg-blue-500"]
@@ -44,7 +44,7 @@ const Button = ({ socket, roomId }: any) => {
 
 	const play = () => {
 		if (audioRef.current) {
-			audioRef.current.play()
+			audioRef.current?.play()
 		} else {
 			// Throw error
 		}
@@ -92,10 +92,10 @@ const Button = ({ socket, roomId }: any) => {
 					</>
 					
 			)}
-			<audio ref={audioRef}>
+			<audio ref={audioRef as React.LegacyRef<HTMLAudioElement> | undefined}>
 				<source src='src.mp3' type="audio/mp3" />
 			</audio>
-			<audio ref={audio2Ref}>
+			<audio ref={audio2Ref as React.LegacyRef<HTMLAudioElement> | undefined }>
 				<source src='button-click.mp3' type="audio/mp3" />
 			</audio>
 			<button disabled={!turn && !start} onClick={(e) => {
