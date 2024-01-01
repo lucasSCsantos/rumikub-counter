@@ -23,16 +23,16 @@ const Button = ({ socket, roomId }: any) => {
 
 	const sendData = async (e: React.MouseEvent | CountdownTimeDelta) => {
 		// e.preventDefault();
-			const msgData: IMsgDataTypes = {
-				roomId,
-				msg: "butao pressionado",
-				number,
-				start,
-				time:
-					new Date(Date.now()).getHours() +
-					":" +
-					new Date(Date.now()).getMinutes(),
-			};
+		const msgData: IMsgDataTypes = {
+			roomId,
+			msg: "butao pressionado",
+			number,
+			start: start && !turn,
+			time:
+				new Date(Date.now()).getHours() +
+				":" +
+				new Date(Date.now()).getMinutes(),
+		};
 		setTurn(false);
 		setStart(false);
 		await socket.emit("press_btn", msgData);

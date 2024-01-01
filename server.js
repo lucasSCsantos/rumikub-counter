@@ -43,6 +43,8 @@ io.on("connection", (socket) => {
     const nextNumber = clients.size === actualNumber ? 1 : actualNumber + 1;
     const nextClient = clientsList[nextNumber - 1];
 
+    console.log(data.start)
+
     if (data.start) {
       socket.emit("turn");
     } else {
