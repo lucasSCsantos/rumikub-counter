@@ -64,8 +64,13 @@ const Button = ({ socket, roomId }: any) => {
 			{turn ? (
 				<Countdown date={Date.now() + 6000} onComplete={(e) => {
 					sendData(e);
-					const audio = new Audio('src.mp3');
-					audio.play();
+					// const audio = new Audio('src.mp3');
+					// audio.play();
+					const soundEffect = new Audio();
+					soundEffect.autoplay = true;
+
+					// later on when you actually want to play a sound at any point without user interaction
+					soundEffect.src = 'src.mp3';
 				}} className="text-white text-2xl mb-5" />
 			) : (
 					<>
