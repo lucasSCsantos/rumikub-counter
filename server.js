@@ -43,9 +43,13 @@ io.on("connection", (socket) => {
     const nextNumber = clients.size === actualNumber ? 1 : actualNumber + 1;
     const nextClient = clientsList[nextNumber - 1];
 
+    if (data.start) {
+      socket.emit("turn");
+    } else {
+      io.to(nextClient).emit("turn")
+    }
 
 
-    io.to(nextClient).emit("turn")
     // socket.to(data.roomId).emit("receive_press", data);
   });
 

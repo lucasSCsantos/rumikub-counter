@@ -8,6 +8,7 @@ interface IMsgDataTypes {
 	user: String;
 	msg: String;
 	time: String;
+	start: boolean;
 	number: Number;
 }
 
@@ -28,6 +29,7 @@ const Button = ({ socket, username, roomId }: any) => {
 				user: username,
 				msg: "butao pressionado",
 				number,
+				start,
 				time:
 					new Date(Date.now()).getHours() +
 					":" +
