@@ -62,7 +62,7 @@ const Button = ({ socket, username, roomId }: any) => {
 	return (
 		<div className="h-screen w-screen flex justify-center items-center flex-col">
 			{/* <Cronometer></Cronometer> */}
-			{!turn && !start ? (
+			{turn && start ? (
 				<Countdown date={Date.now() + 60000} onComplete={(e) => {
 					sendData(e);
 					const audio = new Audio('src.mp3');
@@ -75,7 +75,7 @@ const Button = ({ socket, username, roomId }: any) => {
 				const audio = new Audio('button-click.mp3');
 				sendData(e);
 				audio.play();
-			}} className={` active:mt-10 w-72 h-72 rounded-full ${!turn && !start ? `bg-${colors[number || 0]}-500` : `bg-${colors[0]}-500`} border-1 border-black ${!turn && !start ? `box-shadow-bottom-${colors[number || 0]}` : 'active:box-shadow-bottom-none' } active:box-shadow-bottom-none`}  >
+			}} className={` active:mt-10 w-72 h-72 rounded-full ${turn && start ? `bg-${colors[number || 0]}-500` : `bg-${colors[0]}-500`} border-1 border-black ${turn && start ? `box-shadow-bottom-${colors[number || 0]}` : 'active:box-shadow-bottom-none' } active:box-shadow-bottom-none`}  >
 
 			</button>
 		</div>
