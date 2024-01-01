@@ -62,20 +62,23 @@ const Button = ({ socket, username, roomId }: any) => {
 	return (
 		<div className="h-screen w-screen flex justify-center items-center flex-col">
 			{/* <Cronometer></Cronometer> */}
-			{turn && start ? (
+			{turn ? (
 				<Countdown date={Date.now() + 60000} onComplete={(e) => {
 					sendData(e);
 					const audio = new Audio('src.mp3');
 					audio.play();
 				}} className="text-white text-2xl mb-5" />
 			) : (
-					<span className="text-white text-2xl mb-5">Não é a sua vez!</span>
+					<>
+						{start ? (<span className="text-white text-2xl mb-5">Aperte para começar</span>): (<span className="text-white text-2xl mb-5">Não é a sua vez!</span>)}
+					</>
+					
 			)}
 			<button disabled={!turn && !start} onClick={(e) => {
 				const audio = new Audio('button-click.mp3');
 				sendData(e);
 				audio.play();
-			}} className={` active:mt-10 w-72 h-72 rounded-full ${turn && start ? `bg-${colors[number || 0]}-500` : `bg-${colors[0]}-500`} border-1 border-black ${turn && start ? `box-shadow-bottom-${colors[number || 0]}` : 'active:box-shadow-bottom-none' } active:box-shadow-bottom-none`}  >
+			}} className={` active:mt-10 w-72 h-72 rounded-full ${turn || start ? `bg-${colors[number || 0]}-500` : `bg-${colors[0]}-500`} border-1 border-black ${turn || start ? `box-shadow-bottom-${colors[number || 0]}` : 'active:box-shadow-bottom-none' } active:box-shadow-bottom-none`}  >
 
 			</button>
 		</div>
