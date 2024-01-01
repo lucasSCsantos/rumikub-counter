@@ -18,7 +18,8 @@ const Button = ({ socket, roomId }: any) => {
 	const [turn, setTurn] = useState<boolean>(false);
 	const [start, setStart] = useState<boolean>(false);
 
-	const colors = ["gray", "green", "red", "blue"]
+	const colors = ["gray", "green", "red", "blue"];
+	// const bgColors = ["bg-gray-500", "bg-green-500", "bg-red-500", "bg-blue-500"]
 
 	const sendData = async (e: React.MouseEvent | CountdownTimeDelta) => {
 		// e.preventDefault();
