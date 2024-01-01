@@ -44,7 +44,7 @@ const Button = ({ socket, roomId }: any) => {
 
 	const play = () => {
 		if (audioRef.current) {
-			audioRef.current?.play()
+			audioRef.current.play()
 		} else {
 			// Throw error
 		}
