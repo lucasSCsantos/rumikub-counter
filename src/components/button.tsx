@@ -18,6 +18,9 @@ const Button = ({ socket, roomId }: any) => {
 	const [turn, setTurn] = useState<boolean>(false);
 	const [start, setStart] = useState<boolean>(false);
 
+	const audioRef = useRef();
+	const audio2Ref = useRef();
+
 	const colors = ["gray", "green", "red", "blue"];
 	// const bgColors = ["bg-gray-500", "bg-green-500", "bg-red-500", "bg-blue-500"]
 
@@ -39,6 +42,21 @@ const Button = ({ socket, roomId }: any) => {
 		
 	};
 
+	const play = () => {
+		if (audioRef.current) {
+			audioRef.current.play()
+		} else {
+			// Throw error
+		}
+	}
+
+	const play2 = () => {
+		if (audio2Ref.current) {
+			audio2Ref.current.play()
+		} else {
+			// Throw error
+		}
+	}
 
 	useEffect(() => {
 		socket.on("number", (data: number) => {
@@ -66,11 +84,7 @@ const Button = ({ socket, roomId }: any) => {
 					sendData(e);
 					// const audio = new Audio('src.mp3');
 					// audio.play();
-					const soundEffect = new Audio();
-					soundEffect.autoplay = true;
-
-					// later on when you actually want to play a sound at any point without user interaction
-					soundEffect.src = 'src.mp3';
+					play()
 				}} className="text-white text-2xl mb-5" />
 			) : (
 					<>
@@ -78,10 +92,15 @@ const Button = ({ socket, roomId }: any) => {
 					</>
 					
 			)}
+			<audio ref={audioRef}>
+				<source src='src.mp3' type="audio/mp3" />
+			</audio>
+			<audio ref={audio2Ref}>
+				<source src='button-click.mp3' type="audio/mp3" />
+			</audio>
 			<button disabled={!turn && !start} onClick={(e) => {
-				const audio = new Audio('button-click.mp3');
 				sendData(e);
-				audio.play();
+				play2();
 			}} className={` active:mt-10 w-72 h-72 rounded-full ${turn || start ? `bg-${colors[number || 0]}-500` : `bg-${colors[0]}-500`} border-1 border-black ${turn || start ? `box-shadow-bottom-${colors[number || 0]}` : 'active:box-shadow-bottom-none' } active:box-shadow-bottom-none`}  >
 
 			</button>

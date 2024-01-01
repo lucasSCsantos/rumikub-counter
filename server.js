@@ -6,13 +6,12 @@ const httpServer = http.createServer();
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://rumikub-counter.vercel.app", // Replace with your frontend URL
+    origin: ["https://rumikub-counter.vercel.app", "http://localhost:3000"], // Replace with your frontend URL
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
     credentials: true,
   },
 });
-
 
 
 io.on("connection", (socket) => {
