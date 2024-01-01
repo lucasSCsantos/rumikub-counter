@@ -57,7 +57,7 @@ const Button = ({ socket, username, roomId }: any) => {
 		})
 	}, [socket]);
 
-	console.log(turn);
+	console.log(turn, start);
 
 	return (
 		<div className="h-screen w-screen flex justify-center items-center flex-col">
