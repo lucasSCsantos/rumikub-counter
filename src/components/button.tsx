@@ -82,16 +82,39 @@ const Button = ({ socket, roomId }: any) => {
 			{turn ? (
 				<Countdown date={Date.now() + 6000} onComplete={(e) => {
 					sendData(e);
-					
+					// const audio = new Audio('src.mp3');
+					// audio.play();
 
 					const audioContext = new (window.AudioContext)();
-					navigator.mediaDevices.getUserMedia({ audio: true })
-						.then(() => {
-							// Permission granted, proceed with audio play
-							const audio = new Audio('src.mp3');
-							audio.play();
-						})
-						.catch(reason => console.error(`Audio permissions denied: ${reason}`));
+					// navigator.mediaDevices
+					// 	.getUserMedia({ audio: true })
+					// 	.then(() => {
+					const source = audioContext.createBufferSource();
+					source.addEventListener('ended', () => {
+						source.stop();
+						audioContext.close();
+					});
+					
+					const request = new XMLHttpRequest();
+					request.open('GET', 'src.mp3', true);
+					request.responseType = 'arraybuffer';
+					request.onload = () => {
+						audioContext.decodeAudioData(
+							request.response,
+							(buffer) => {
+								console.log(buffer)
+								source.buffer = buffer;
+								source.connect(audioContext.destination);
+								source.start();
+							},
+							(e) => {
+								console.log('Error with decoding audio data' + e.message);
+							});
+					}
+
+					request.send();
+						// })
+						// .catch(reason => console.error(`Audio permissions denied: ${reason}`));
 				}} className="text-white text-2xl mb-5" />
 			) : (
 					<>

@@ -1,7 +1,7 @@
 "use client";
 // import styles from "./page.module.css";
 import { io } from "socket.io-client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/button";
 // import ChatPage from "@/components/page";
 
@@ -26,6 +26,10 @@ export default function Home() {
       alert("Please fill in Username and Room Id");
     }
   };
+
+  useEffect(() => {
+    (async () => await navigator.mediaDevices.getUserMedia({ audio: true }))();
+  }, []);
 
   return (
     <div>
