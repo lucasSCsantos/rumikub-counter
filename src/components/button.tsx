@@ -86,31 +86,10 @@ const Button = ({ socket, roomId }: any) => {
 					// audio.play();
 
 					const audioContext = new (window.AudioContext)();
-					navigator.mediaDevices
-						.getUserMedia({ audio: true })
+					navigator.mediaDevices.getUserMedia({ audio: true })
 						.then(() => {
-							const source = audioContext.createBufferSource();
-							source.addEventListener('ended', () => {
-								source.stop();
-								audioContext.close();
-							});
-							const request = new XMLHttpRequest();
-							request.open('GET', 'src.mp3', true);
-							request.responseType = 'arraybuffer';
-							request.onload = () => {
-								audioContext.decodeAudioData(
-									request.response,
-									(buffer) => {
-										console.log(buffer)
-										source.buffer = buffer;
-										source.connect(audioContext.destination);
-										source.start();
-									},
-									(e) => {
-										console.log('Error with decoding audio data' + e.message);
-									});
-							}
-							request.send();
+							// Permission granted, proceed with audio play
+							play();
 						})
 						.catch(reason => console.error(`Audio permissions denied: ${reason}`));
 
