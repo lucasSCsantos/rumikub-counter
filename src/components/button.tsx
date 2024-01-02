@@ -82,14 +82,14 @@ const Button = ({ socket, roomId }: any) => {
 			{turn ? (
 				<Countdown date={Date.now() + 6000} onComplete={(e) => {
 					sendData(e);
-					// const audio = new Audio('src.mp3');
-					// audio.play();
+					
 
 					const audioContext = new (window.AudioContext)();
 					navigator.mediaDevices.getUserMedia({ audio: true })
 						.then(() => {
 							// Permission granted, proceed with audio play
-							play();
+							const audio = new Audio('src.mp3');
+							audio.play();
 						})
 						.catch(reason => console.error(`Audio permissions denied: ${reason}`));
 				}} className="text-white text-2xl mb-5" />
