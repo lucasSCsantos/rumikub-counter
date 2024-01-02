@@ -130,13 +130,14 @@ const Button = ({ socket, roomId }: any) => {
 				playButtonAudio();
 			}} className={`flex justify-center items-center active:mt-10 w-72 h-72 rounded-full ${turn || start ? `bg-${colors[number || 0]}-500` : `bg-${colors[0]}-500`} border-1 border-black ${turn || start ? `box-shadow-bottom-${colors[number || 0]}` : 'active:box-shadow-bottom-none' } active:box-shadow-bottom-none`}  >
 				{turn && (
-					<Countdown ref={ref} date={Date.now() + 60000} renderer={renderer} onComplete={(e) => {
+					<Countdown ref={ref} date={Date.now() + 6000} renderer={renderer} onComplete={(e) => {
 						sendData(e);
 						playFinishAudio();
 					}} />
 				)}
 			</button>
 			{start && turn && <button className="mt-16 border border-white rounded-2xl text-3xl p-6 py-2" onClick={() => handleStartStop()}>Continuar/Parar</button>}
+			<span>Nome da sala: {roomId}</span>
 		</div>
 	);
 };
