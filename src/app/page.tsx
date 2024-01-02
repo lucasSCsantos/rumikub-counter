@@ -12,7 +12,7 @@ export default function Home() {
   const [roomId, setroomId] = useState("");
 
   var socket: any;
-  socket = io("https://23f8-187-44-192-104.ngrok-free.app");
+  socket = io("https://f5a8-187-44-192-104.ngrok-free.app");
 
   const handleJoin = () => {
     if (roomId !== "") {
