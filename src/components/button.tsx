@@ -84,7 +84,9 @@ const Button = ({ socket, roomId }: any) => {
 					sendData(e);
 					// const audio = new Audio('src.mp3');
 					// audio.play();
-					play();
+					// const audio = new window.Audio();
+					// audio.src = "src.mp3"
+					play2();
 				}} className="text-white text-2xl mb-5" />
 			) : (
 					<>
