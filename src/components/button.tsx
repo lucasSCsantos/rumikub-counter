@@ -80,7 +80,7 @@ const Button = ({ socket, roomId }: any) => {
 		<div className="h-screen w-screen flex justify-center items-center flex-col">
 			{/* <Cronometer></Cronometer> */}
 			{turn ? (
-				<Countdown date={Date.now() + 60000} onComplete={(e) => {
+				<Countdown date={Date.now() + 6000} onComplete={(e) => {
 					sendData(e);
 					// const audio = new Audio('src.mp3');
 					// audio.play();
@@ -96,7 +96,7 @@ const Button = ({ socket, roomId }: any) => {
 				<source src='src.mp3' type="audio/mp3" />
 			</audio>
 			<audio ref={audio2Ref as React.LegacyRef<HTMLAudioElement> | undefined }>
-				<source src='button-click.mp3' type="audio/mp3" />
+				<source src='src.mp3' type="audio/mp3" />
 			</audio>
 			<button disabled={!turn && !start} onClick={(e) => {
 				sendData(e);
