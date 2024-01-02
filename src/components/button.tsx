@@ -84,9 +84,37 @@ const Button = ({ socket, roomId }: any) => {
 					sendData(e);
 					// const audio = new Audio('src.mp3');
 					// audio.play();
-					// const audio = new window.Audio();
-					// audio.src = "src.mp3"
-					play2();
+
+					const audioContext = new (window.AudioContext)();
+					navigator.mediaDevices
+						.getUserMedia({ audio: true })
+						.then(() => {
+							const source = audioContext.createBufferSource();
+							source.addEventListener('ended', () => {
+								source.stop();
+								audioContext.close();
+							});
+							const request = new XMLHttpRequest();
+							request.open('GET', 'src.mp3', true);
+							request.responseType = 'arraybuffer';
+							request.onload = () => {
+								audioContext.decodeAudioData(
+									request.response,
+									(buffer) => {
+										console.log(buffer)
+										source.buffer = buffer;
+										source.connect(audioContext.destination);
+										source.start();
+									},
+									(e) => {
+										console.log('Error with decoding audio data' + e.message);
+									});
+							}
+							request.send();
+						})
+						.catch(reason => console.error(`Audio permissions denied: ${reason}`));
+
+					play();
 				}} className="text-white text-2xl mb-5" />
 			) : (
 					<>
