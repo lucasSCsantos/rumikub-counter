@@ -92,8 +92,6 @@ const Button = ({ socket, roomId }: any) => {
 							play();
 						})
 						.catch(reason => console.error(`Audio permissions denied: ${reason}`));
-
-					play();
 				}} className="text-white text-2xl mb-5" />
 			) : (
 					<>
