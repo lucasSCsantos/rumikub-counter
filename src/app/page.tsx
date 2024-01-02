@@ -3,6 +3,7 @@
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 import Button from "@/components/button";
+import { useLocalStorage } from "@uidotdev/usehooks";
 // import ChatPage from "@/components/page";
 
 export default function Home() {
@@ -28,7 +29,13 @@ export default function Home() {
   };
 
   useEffect(() => {
-    (async () => await navigator.mediaDevices.getUserMedia({ audio: true }))();
+    (async () => {
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true })
+      } catch (e) {
+        console.error(`Audio permissions denied: ${e}`)
+      }
+    })();
   }, []);
 
   return (
