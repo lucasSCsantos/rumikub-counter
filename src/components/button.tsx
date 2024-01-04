@@ -136,7 +136,7 @@ const Button = ({ socket, roomId }: any) => {
 					}} />
 				)}
 			</button>
-			{start && turn && <button className="mt-16 border border-white rounded-2xl text-3xl p-6 py-2" onClick={() => handleStartStop()}>Continuar/Parar</button>}
+			{(start && turn) && <button className="mt-16 border border-white rounded-2xl text-3xl p-6 py-2" onClick={() => handleStartStop()}>Continuar/Parar</button>}
 			<span className="mt-4 rounded-2xl text-3xl p-6 py-2">Nome da sala: {roomId}</span>
 		</div>
 	);
