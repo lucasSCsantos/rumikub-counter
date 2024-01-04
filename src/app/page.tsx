@@ -1,33 +1,33 @@
 "use client";
 
-import { LegacyRef, MutableRefObject, useEffect, useRef} from "react";
+import { LegacyRef, MutableRefObject, useEffect, useRef, useState} from "react";
 import { useSocketContext } from "./context/socket";
 import { useRouter } from "next/navigation";
+import { useSessionStorage } from "@uidotdev/usehooks";
 // import ChatPage from "@/components/page";
 
 export default function Home() {
   const nameRef: MutableRefObject<HTMLInputElement | undefined> = useRef();
   const roomRef: MutableRefObject<HTMLInputElement | undefined> = useRef();
 
-  const router = useRouter();
+  const [roomId, setRoomId] = useSessionStorage("roomId", "");
+  const [showRoom, setShowRoom] = useState(false);
 
   const { socket } = useSocketContext();
   
   const handleJoinRoom = () => {
     const [room, name] = [roomRef.current?.value || "", nameRef.current?.value || ""];
+
+    setRoomId(room);
+
     socket?.emit("join_room", { room, name });
   }
-
-  useEffect(() => {
-    socket?.on("user_join", (data) => {
-      router.push("/" + data.roomId)
-    })
-  }, [])
 
   return (
     <div>
       <div
         className="h-screen w-screen flex justify-center items-center flex-col gap-4"
+        style={{ display: showRoom ? "none" : "" }}
       >
         <input
           className="h-8 w-60 p-1 text-black"

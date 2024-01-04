@@ -5,12 +5,15 @@ import { useEffect, useState } from "react";
 import Button from "@/components/button";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import Link from "next/link";
+import { useRouter } from "next/router";
 // import ChatPage from "@/components/page";
 
-export default function Home() {
+export default function Room() {
   const [showChat, setShowChat] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [roomId, setroomId] = useState("");
+
+  const router = useRouter()
 
   var socket: any;
   socket = io("http://localhost:3002");
