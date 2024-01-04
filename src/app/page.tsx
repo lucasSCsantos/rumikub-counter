@@ -17,11 +17,18 @@ export default function Home() {
   
   const handleJoinRoom = () => {
     const [room, name] = [roomRef.current?.value || "", nameRef.current?.value || ""];
+    socket?.emit("join_room", { room, name });
 
     setRoomId(room);
-
-    socket?.emit("join_room", { room, name });
+    setShowRoom(true);
   }
+
+  useEffect(() => {
+    if (roomId) {
+      socket?.emit("join_room", { room: roomId });
+      setShowRoom(true);
+    }
+  }, [])
 
   return (
     <div>
