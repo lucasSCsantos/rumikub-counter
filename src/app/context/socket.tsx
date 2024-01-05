@@ -9,7 +9,7 @@ const SocketContext = createContext<{
 }>({})
 
 export const SocketContextProvider = ({ children }: { children: ReactNode | ReactNode[]}) => {
-	const socket = useSocket("http://localhost:3002");
+	const socket = useSocket("http://localhost:3001");
 
 	return (
 		<SocketContext.Provider value={{ socket }}>
