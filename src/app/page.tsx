@@ -2,12 +2,10 @@
 
 import { LegacyRef, MutableRefObject, useEffect, useRef, useState} from "react";
 import { useSocketContext } from "./context/socket";
-import { useRouter } from "next/navigation";
-import { useSessionStorage } from "@uidotdev/usehooks";
+import { useSessionStorage } from "usehooks-ts";
 import Button from "@/components/button";
 import { UserJoinErrorEventData, UserJoinEventData, UsersChangeEventData } from "@/@types/socket";
 import actions from "@/data/actions";
-// import ChatPage from "@/components/page";
 
 export default function Home() {
   const usernameRef: MutableRefObject<HTMLInputElement | undefined> = useRef();
@@ -15,7 +13,7 @@ export default function Home() {
 
   const [inviteId, setInviteId] = useState("");
   const [role, setRole] = useState<string | null>(null);
-  // const [username, setUsername] = useState<string>("");
+
   const [number, setNumber] = useState<number>(0);
   const [roomId, setRoomId] = useSessionStorage("roomId", "");
   const [username, setUsername] = useSessionStorage("username", "");
