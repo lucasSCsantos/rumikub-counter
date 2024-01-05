@@ -39,7 +39,7 @@ const Button = ({ socket, roomId, number, admin }: any) => {
 	const countdownRef = useRef() as LegacyRef<Countdown> | undefined;
 	const buttonRef = useRef<HTMLButtonElement>();
 
-	const colors = ["gray", "green", "red", "blue"];
+	// const colors = ["gray", "pink", "red", "blue", "yellow", "pink", "brown"];
 
 	const handleStartStop = () => {
 		if ((countdownRef as unknown as CountdownRef)?.current?.isPaused()) {
@@ -50,8 +50,6 @@ const Button = ({ socket, roomId, number, admin }: any) => {
 			(countdownRef as unknown as CountdownRef)?.current?.pause();
 		}
 	}
-	
-
 
 	const playFinishAudio = () => {
 		const audioContext = new (window.AudioContext)();
@@ -117,20 +115,18 @@ const Button = ({ socket, roomId, number, admin }: any) => {
 		})
 	}, [socket]);
 
-
-
 	return (
 		<div className="h-screen w-screen flex justify-center items-center flex-col relative">
-			{/* <audio ref={audio2Ref as React.LegacyRef<HTMLAudioElement> | undefined }>
+			<audio ref={audio2Ref as React.LegacyRef<HTMLAudioElement> | undefined }>
 				<source src='button-click.mp3' type="audio/mp3" />
-			</audio> */}
+			</audio>
 			<span className="rounded-2xl text-xl p-6 py-2 top-0 absolute">Sala: {roomId}</span>
 
 			<Message admin={admin} turn={turn} start={start} />
 			<button disabled={!turn} onClick={(e) => {
 				handleChangeTurn();
 				playButtonAudio();
-			}} className={`flex justify-center items-center enabled:active:scale-90 enabled:transition-all w-72 h-72 rounded-full bg-${colors[!turn ? 0 : number]}-500`}  >
+			}} className={`flex justify-center items-center enabled:active:scale-90 enabled:transition-all w-72 h-72 rounded-full bg-${turn ? "blue" : "red"}-500`}  >
 
 				{start && (
 					<Countdown ref={countdownRef} date={Date.now() + 3000} renderer={renderer} onComplete={() => {
@@ -139,6 +135,7 @@ const Button = ({ socket, roomId, number, admin }: any) => {
 				)}
 				{turn && (
 					<Countdown ref={countdownRef} date={Date.now() + 60000} renderer={renderer} onComplete={(e) => {
+						playFinishAudio();
 						handleChangeTurn();
 					}} />
 				)}

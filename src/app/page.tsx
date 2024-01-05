@@ -3,9 +3,15 @@
 import { LegacyRef, MutableRefObject, useEffect, useRef, useState} from "react";
 import { useSocketContext } from "./context/socket";
 import { useSessionStorage } from "usehooks-ts";
-import Button from "@/components/button";
+// import Button from "@/components/button";
 import { UserJoinErrorEventData, UserJoinEventData, UsersChangeEventData } from "@/@types/socket";
 import actions from "@/data/actions";
+import dynamic from "next/dynamic";
+
+const Button = dynamic(
+  () => import('../components/button'),
+  { ssr: false }
+)
 
 export default function Home() {
   const usernameRef: MutableRefObject<HTMLInputElement | undefined> = useRef();
@@ -24,7 +30,6 @@ export default function Home() {
   const handleJoinRoom = () => {
     const [room, username] = [roomRef.current?.value || "", usernameRef.current?.value || ""];
     socket?.emit("join_room", { roomId: room, username });
-
     setRoomId(room);
   }
 
@@ -98,9 +103,11 @@ export default function Home() {
           Join
         </button>
       </div>
-      <div style={{ display: !showRoom ? "none" : "" }}>
-        <Button socket={socket} roomId={roomId} number={number} admin={role === "ADMIN"} />
-      </div>
+      {showRoom && (
+        <div>
+          <Button socket={socket} roomId={roomId} number={number} admin={role === "ADMIN"} />
+        </div>
+      )}
     </div>
   );
 }
