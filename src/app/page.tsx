@@ -12,7 +12,7 @@ export default function Home() {
   const [roomId, setroomId] = useState("");
 
   var socket: any;
-  socket = io("http://18.231.98.129:3003");
+  socket = io("https://18.231.98.129:443");
 
   const handleJoin = () => {
     if (roomId !== "") {
