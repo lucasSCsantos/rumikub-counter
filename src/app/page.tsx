@@ -1,12 +1,21 @@
 "use client";
-// import styles from "./page.module.css";
-import { io } from "socket.io-client";
-import { useEffect, useState } from "react";
-import Button from "@/components/button";
-import { useLocalStorage } from "@uidotdev/usehooks";
-// import ChatPage from "@/components/page";
+
+import { LegacyRef, MutableRefObject, useEffect, useRef, useState} from "react";
+import { useSocketContext } from "./context/socket";
+import { useSessionStorage } from "usehooks-ts";
+// import Button from "@/components/button";
+import { UserJoinErrorEventData, UserJoinEventData, UsersChangeEventData } from "@/@types/socket";
+import actions from "@/data/actions";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+
+const Button = dynamic(
+  () => import('../components/button'),
+  { ssr: false }
+)
 
 export default function Home() {
+<<<<<<< HEAD
   const [showChat, setShowChat] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [roomId, setroomId] = useState("");
@@ -25,8 +34,43 @@ export default function Home() {
       }, 4000);
     } else {
       alert("Please fill in Username and Room Id");
+=======
+  const usernameRef: MutableRefObject<HTMLInputElement | undefined> = useRef();
+  const roomRef: MutableRefObject<HTMLInputElement | undefined> = useRef();
+
+  const router = useRouter();
+
+  const [inviteId, setInviteId] = useState("");
+  const [role, setRole] = useState<string | null>(null);
+
+  const [number, setNumber] = useState<number>(0);
+  const [roomId, setRoomId] = useSessionStorage("roomId", "");
+  const [username, setUsername] = useSessionStorage("username", "");
+  const [showRoom, setShowRoom] = useState(false);
+
+  const { socket } = useSocketContext();
+  
+  const handleJoinRoom = () => {
+    const [room, username] = [roomRef.current?.value || "", usernameRef.current?.value || ""];
+    socket?.emit("join_room", { roomId: room, username });
+    setRoomId(room);
+  }
+
+  const handleExit = () => {
+    setRoomId("");
+    setUsername("");
+    
+    setShowRoom(false);
+
+    router.refresh();
+  }
+
+  useEffect(() => {
+    if (roomId) {
+      socket?.emit("join_room", { roomId, username });
+>>>>>>> develop
     }
-  };
+  }, [])
 
   useEffect(() => {
     (async () => {
@@ -38,32 +82,65 @@ export default function Home() {
     })();
   }, []);
 
+  useEffect(() => {
+    socket?.on("user_join", ({ invite_id, username, role, number }: UserJoinEventData) => {
+      setInviteId(invite_id);
+      setRole(role);
+      setNumber(number);
+      setShowRoom(true);
+
+      if (username) {
+        setUsername(username);
+      } else {
+        // show modal de username
+      }
+    });
+
+    socket?.on("user_join_error", ({ error }: UserJoinErrorEventData) => {
+      alert(error);
+    });
+
+    socket?.on("users_change", ({ role: newRole, number }: UsersChangeEventData) => {
+      setNumber(number);
+
+      if (newRole !== role && newRole === "ADMIN") {
+        setRole(newRole);
+      }
+    });
+
+    socket?.on("user_log", ({ id, username, action }) => {
+      console.log(`[${id}] - User ${username} ${actions[action as keyof typeof actions]}`)
+    })
+  }, [socket]);
+
+
   return (
     <div>
       <div
         className="h-screen w-screen flex justify-center items-center flex-col gap-4"
-        style={{ display: showChat ? "none" : "" }}
+        style={{ display: showRoom ? "none" : "" }}
       >
-       
+        <input
+          className="h-8 w-60 p-1 text-black"
+          type="text"
+          placeholder="Username"
+          ref={usernameRef as LegacyRef<HTMLInputElement>}
+        />
         <input
           className="h-8 w-60 p-1 text-black"
           type="text"
           placeholder="room id"
-          onChange={(e) => setroomId(e.target.value)}
-          disabled={showSpinner}
+          ref={roomRef as LegacyRef<HTMLInputElement>}
         />
-        <button className="h-8 w-60 justify-center flex items-center bg-red-500" onClick={() => handleJoin()}>
-          {!showSpinner ? (
-            "Join"
-          ) : (
-            <div className="rounded-full border-4 border-solid border-black border-t-4 border-t-orange-500 w-5 h-5 animate-spin"></div>
-          )}
+        <button className="h-8 w-60 justify-center flex items-center bg-red-500" onClick={() => handleJoinRoom()}>
+          Join
         </button>
       </div>
-      <div style={{ display: !showChat ? "none" : "" }}>
-        <Button socket={socket} roomId={roomId} />
-        {/* <ChatPage socket={socket} roomId={roomId} username={userName} /> */}
-      </div>
+      {showRoom && (
+        <div>
+          <Button socket={socket} roomId={roomId} number={number} admin={role === "ADMIN"} handleExit={handleExit} />
+        </div>
+      )}
     </div>
   );
 }
