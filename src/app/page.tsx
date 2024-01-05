@@ -12,7 +12,7 @@ export default function Home() {
   const [roomId, setroomId] = useState("");
 
   var socket: any;
-  socket = io("https://18.231.98.129:443");
+  socket = io("https://turntimerapi.luktech.com.br/");
 
   const handleJoin = () => {
     if (roomId !== "") {
