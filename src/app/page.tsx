@@ -15,26 +15,6 @@ const Button = dynamic(
 )
 
 export default function Home() {
-<<<<<<< HEAD
-  const [showChat, setShowChat] = useState(false);
-  const [showSpinner, setShowSpinner] = useState(false);
-  const [roomId, setroomId] = useState("");
-
-  var socket: any;
-  socket = io("https://turntimerapi.luktech.com.br/");
-
-  const handleJoin = () => {
-    if (roomId !== "") {
-      socket.emit("join_room", roomId);
-      setShowSpinner(true);
-      // You can remove this setTimeout and add your own logic
-      setTimeout(() => {
-        setShowChat(true);
-        setShowSpinner(false);
-      }, 4000);
-    } else {
-      alert("Please fill in Username and Room Id");
-=======
   const usernameRef: MutableRefObject<HTMLInputElement | undefined> = useRef();
   const roomRef: MutableRefObject<HTMLInputElement | undefined> = useRef();
 
@@ -68,7 +48,6 @@ export default function Home() {
   useEffect(() => {
     if (roomId) {
       socket?.emit("join_room", { roomId, username });
->>>>>>> develop
     }
   }, [])
 
