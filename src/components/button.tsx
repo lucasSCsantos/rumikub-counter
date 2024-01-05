@@ -27,7 +27,6 @@ const Button = ({ socket, roomId }: any) => {
 	const [number, setNumber] = useState<number>(0);
 	const [turn, setTurn] = useState<boolean>(false);
 	const [start, setStart] = useState<boolean>(false);
-	// const [paused, setPaused] = useState<boolean>(false);
 
 	const audio2Ref = useRef<HTMLAudioElement>();
 

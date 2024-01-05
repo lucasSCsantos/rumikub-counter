@@ -4,6 +4,7 @@ import { LegacyRef, MutableRefObject, useEffect, useRef, useState} from "react";
 import { useSocketContext } from "./context/socket";
 import { useRouter } from "next/navigation";
 import { useSessionStorage } from "@uidotdev/usehooks";
+import Button from "@/components/button";
 // import ChatPage from "@/components/page";
 
 export default function Home() {
@@ -51,6 +52,9 @@ export default function Home() {
         <button className="h-8 w-60 justify-center flex items-center bg-red-500" onClick={() => handleJoinRoom()}>
           Join
         </button>
+      </div>
+      <div style={{ display: !showRoom ? "none" : "" }}>
+        <Button socket={socket} roomId={roomId} />
       </div>
     </div>
   );
