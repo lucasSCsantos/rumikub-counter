@@ -9,7 +9,7 @@ const SocketContext = createContext<{
 }>({})
 
 export const SocketContextProvider = ({ children }: { children: ReactNode | ReactNode[]}) => {
-	const socket = useSocket(process.env.NEXT_PUBLIC_SOCKET_URL);
+	const socket = useSocket("https://turntimerapi.luktech.com.br");
 
 	return (
 		<SocketContext.Provider value={{ socket }}>
