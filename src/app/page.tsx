@@ -35,6 +35,16 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
+    (async () => {
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true })
+      } catch (e) {
+        console.error(`Audio permissions denied: ${e}`)
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     socket?.on("user_join", ({ invite_id, username, role, number }: UserJoinEventData) => {
       setInviteId(invite_id);
       setRole(role);
