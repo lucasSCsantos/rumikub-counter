@@ -9,7 +9,7 @@ const SocketContext = createContext<{
 }>({})
 
 export const SocketContextProvider = ({ children }: { children: ReactNode | ReactNode[]}) => {
-	const socket = useSocket("https://5312-187-44-192-104.ngrok-free.app");
+	const socket = useSocket(process.env.SOCKET_URL);
 
 	return (
 		<SocketContext.Provider value={{ socket }}>
