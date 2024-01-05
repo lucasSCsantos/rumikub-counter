@@ -30,7 +30,7 @@ const renderer: CountdownRendererFn = ({ hours, minutes, seconds }) => {
 	return <span className={`text-white text-9xl`}>{minutes === 1 ? 60 : seconds}</span>;
 };
 
-const Button = ({ socket, roomId, number, admin }: any) => {
+const Button = ({ socket, roomId, number, admin, handleExit }: any) => {
 	const [turn, setTurn] = useState<boolean>(false);
 	const [start, setStart] = useState<boolean>(false);
 	const [started, setStarted] = useState<boolean>(false);
@@ -126,7 +126,7 @@ const Button = ({ socket, roomId, number, admin }: any) => {
 			<button disabled={!turn} onClick={(e) => {
 				handleChangeTurn();
 				playButtonAudio();
-			}} className={`flex justify-center items-center enabled:active:scale-90 enabled:transition-all w-72 h-72 rounded-full bg-${turn ? "blue" : "red"}-500`}  >
+			}} className={`flex justify-center items-center enabled:active:scale-90 enabled:transition-all w-72 h-72 rounded-full bg-${turn ? "green" : "gray"}-500 disabled:bg-gray-500`}  >
 
 				{start && (
 					<Countdown ref={countdownRef} date={Date.now() + 3000} renderer={renderer} onComplete={() => {
@@ -144,8 +144,10 @@ const Button = ({ socket, roomId, number, admin }: any) => {
 			<div className="h-1/4 absolute bottom-12">
 				{turn && <button ref={buttonRef as RefObject<HTMLButtonElement>} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all" onClick={() => handleStartStop()}>Pausar</button>}
 				
-				{!started && admin && <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all" onClick={() => handleStartTimer()}>Start</button>}
+				{!started && admin && <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-all" onClick={() => handleStartTimer()}>Começar</button>}
+
 			</div>
+			<button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-all absolute bottom-6 w-72" onClick={() => handleExit()}>Sair</button>
 		</div>
 	);
 };

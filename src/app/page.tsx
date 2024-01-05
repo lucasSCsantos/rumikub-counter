@@ -7,6 +7,7 @@ import { useSessionStorage } from "usehooks-ts";
 import { UserJoinErrorEventData, UserJoinEventData, UsersChangeEventData } from "@/@types/socket";
 import actions from "@/data/actions";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
 const Button = dynamic(
   () => import('../components/button'),
@@ -16,6 +17,8 @@ const Button = dynamic(
 export default function Home() {
   const usernameRef: MutableRefObject<HTMLInputElement | undefined> = useRef();
   const roomRef: MutableRefObject<HTMLInputElement | undefined> = useRef();
+
+  const router = useRouter();
 
   const [inviteId, setInviteId] = useState("");
   const [role, setRole] = useState<string | null>(null);
@@ -31,6 +34,15 @@ export default function Home() {
     const [room, username] = [roomRef.current?.value || "", usernameRef.current?.value || ""];
     socket?.emit("join_room", { roomId: room, username });
     setRoomId(room);
+  }
+
+  const handleExit = () => {
+    setRoomId("");
+    setUsername("");
+    
+    setShowRoom(false);
+
+    router.refresh();
   }
 
   useEffect(() => {
@@ -105,7 +117,7 @@ export default function Home() {
       </div>
       {showRoom && (
         <div>
-          <Button socket={socket} roomId={roomId} number={number} admin={role === "ADMIN"} />
+          <Button socket={socket} roomId={roomId} number={number} admin={role === "ADMIN"} handleExit={handleExit} />
         </div>
       )}
     </div>
