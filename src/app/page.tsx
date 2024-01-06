@@ -4,7 +4,7 @@ import { LegacyRef, MutableRefObject, useEffect, useRef, useState} from "react";
 import { useSocketContext } from "./context/socket";
 import { useSessionStorage } from "usehooks-ts";
 // import Button from "@/components/button";
-import { UserJoinErrorEventData, UserJoinEventData, UsersChangeEventData } from "@/@types/socket";
+import { UserJoinErrorEventData, UserJoinEventData, UsersChangeEventData, UsersListEventData } from "@/@types/socket";
 import actions from "@/data/actions";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -27,6 +27,7 @@ export default function Home() {
   const [roomId, setRoomId] = useSessionStorage("roomId", "");
   const [username, setUsername] = useSessionStorage("username", "");
   const [showRoom, setShowRoom] = useState(false);
+  const [users, setUsers] = useState<UsersListEventData | []>([]);
 
   const { socket } = useSocketContext();
   
@@ -79,6 +80,11 @@ export default function Home() {
       alert(error);
     });
 
+    socket?.on("users_list", (users: UsersListEventData) => {
+      console.log(users);
+      setUsers(users);
+    });
+
     socket?.on("users_change", ({ role: newRole, number }: UsersChangeEventData) => {
       setNumber(number);
 
@@ -117,7 +123,7 @@ export default function Home() {
       </div>
       {showRoom && (
         <div>
-          <Button socket={socket} roomId={roomId} number={number} admin={role === "ADMIN"} handleExit={handleExit} />
+          <Button socket={socket} roomId={roomId} number={number} admin={role === "ADMIN"} handleExit={handleExit} users={users} />
         </div>
       )}
     </div>

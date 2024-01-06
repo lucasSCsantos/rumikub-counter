@@ -30,10 +30,12 @@ const renderer: CountdownRendererFn = ({ hours, minutes, seconds }) => {
 	return <span className={`text-white text-9xl`}>{minutes === 1 ? 60 : seconds}</span>;
 };
 
-const Button = ({ socket, roomId, number, admin, handleExit }: any) => {
+const Button = ({ socket, roomId, number, admin, handleExit, users }: any) => {
 	const [turn, setTurn] = useState<boolean>(false);
 	const [start, setStart] = useState<boolean>(false);
 	const [started, setStarted] = useState<boolean>(false);
+	const [time, setTime] = useState<number>(60000);
+	const [key, setKey] = useState(1);
 	const audio2Ref = useRef<HTMLAudioElement>();
 
 	const countdownRef = useRef() as LegacyRef<Countdown> | undefined;
@@ -89,7 +91,7 @@ const Button = ({ socket, roomId, number, admin, handleExit }: any) => {
 
 	const handleStartTimer = () => {
 		setStart(true);
-
+		(countdownRef as unknown as CountdownRef).current?.start();
 		if (admin) {
 			setStarted(true);
 		}
@@ -108,6 +110,18 @@ const Button = ({ socket, roomId, number, admin, handleExit }: any) => {
 		});
 	}
 
+	const handleRestartTurn = () => {
+		setKey((k) => k + 1);
+		if ((buttonRef as unknown as ButtonRef).current.textContent === "Continuar") {	
+			setTimeout(() => {
+				(countdownRef as unknown as CountdownRef)?.current?.pause();
+
+			}, 1000)
+		}
+		// 	alert("Paus")
+		// }
+	}
+
 	useEffect(() => {
 		socket.on("turn", () => {
 			handleStartTurn();
@@ -120,7 +134,12 @@ const Button = ({ socket, roomId, number, admin, handleExit }: any) => {
 			<audio ref={audio2Ref as React.LegacyRef<HTMLAudioElement> | undefined }>
 				<source src='button-click.mp3' type="audio/mp3" />
 			</audio>
-			<span className="rounded-2xl text-xl p-6 py-2 top-0 absolute">Sala: {roomId}</span>
+			<div className="top-0 absolute flex flex-col">
+				<span className="text-xl p-6 py-2">Sala: {roomId}</span>
+				{users.length > 0 && users.map(({ username }: { username: string }) => (
+					<span className="text-xl p-6 py-2" key={username}>{username}</span>
+				))}
+			</div>
 
 			<Message admin={admin} turn={turn} start={start} />
 			<button disabled={!turn} onClick={(e) => {
@@ -134,15 +153,16 @@ const Button = ({ socket, roomId, number, admin, handleExit }: any) => {
 					}} />
 				)}
 				{turn && (
-					<Countdown ref={countdownRef} date={Date.now() + 60000} renderer={renderer} onComplete={(e) => {
+					<Countdown ref={countdownRef} date={Date.now() + time} key={key} renderer={renderer} onComplete={(e) => {
 						playFinishAudio();
 						handleChangeTurn();
 					}} />
 				)}
 
 			</button>
-			<div className="h-1/4 absolute bottom-12">
+			<div className="h-1/4 absolute bottom-12 flex flex-col gap-4">
 				{turn && <button ref={buttonRef as RefObject<HTMLButtonElement>} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all" onClick={() => handleStartStop()}>Pausar</button>}
+				{turn && <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all" onClick={() => handleRestartTurn()}>Reiniciar</button>}
 				
 				{!started && admin && <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-all" onClick={() => handleStartTimer()}>Começar</button>}
 
