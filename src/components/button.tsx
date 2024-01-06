@@ -4,6 +4,8 @@ import './button.css';
 import Countdown, { CountdownRendererFn } from "react-countdown";
 import Message from "./message";
 
+import { DropResult, DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+
 interface IMsgDataTypes {
 	roomId: String | number;
 	msg: String;
@@ -30,7 +32,7 @@ const renderer: CountdownRendererFn = ({ hours, minutes, seconds }) => {
 	return <span className={`text-white text-9xl`}>{minutes === 1 ? 60 : seconds}</span>;
 };
 
-const Button = ({ socket, roomId, number, admin, handleExit, users }: any) => {
+const Button = ({ socket, roomId, number, admin, handleExit, users, setUsers, username: name }: any) => {
 	const [turn, setTurn] = useState<boolean>(false);
 	const [start, setStart] = useState<boolean>(false);
 	const [started, setStarted] = useState<boolean>(false);
@@ -92,8 +94,19 @@ const Button = ({ socket, roomId, number, admin, handleExit, users }: any) => {
 	const handleStartTimer = () => {
 		setStart(true);
 		(countdownRef as unknown as CountdownRef).current?.start();
-		if (admin) {
+
+		if (number === 1) {
+			socket.emit("start", roomId);
 			setStarted(true);
+		}
+	}
+
+	const handleStopTimer = () => {
+		if (number === 1) {
+			socket.emit("stop", roomId);
+			setStart(false);
+			setTurn(false);
+			setStarted(false);
 		}
 	}
 
@@ -118,14 +131,44 @@ const Button = ({ socket, roomId, number, admin, handleExit, users }: any) => {
 
 			}, 1000)
 		}
-		// 	alert("Paus")
-		// }
 	}
+
+	const handleDrop = (droppedItem: DropResult) => {
+		// Ignore drop outside droppable container
+		console.log(droppedItem)
+		if (!droppedItem.destination) return;
+		var updatedList = [...users];
+
+		const [reorderedItem] = updatedList.splice(droppedItem.source.index, 1);
+
+		updatedList.splice(droppedItem.destination.index, 0, reorderedItem);
+		
+		updatedList = updatedList.map((item, index) => (
+			{
+				...item,
+				number: index + 1,
+			}
+		))
+
+		socket.emit("change_order", { roomId, admin, newOrder: updatedList });
+
+		setUsers(updatedList);
+	};
 
 	useEffect(() => {
 		socket.on("turn", () => {
 			handleStartTurn();
 			//start a contagem
+		})
+
+		socket.on("start", () => {
+			setStarted(true);
+		})
+
+		socket.on("stop", () => {
+			setStart(false);
+			setTurn(false);
+			setStarted(false);
 		})
 	}, [socket]);
 
@@ -136,9 +179,42 @@ const Button = ({ socket, roomId, number, admin, handleExit, users }: any) => {
 			</audio>
 			<div className="top-0 absolute flex flex-col">
 				<span className="text-xl p-6 py-2">Sala: {roomId}</span>
-				{users.length > 0 && users.map(({ username }: { username: string }) => (
-					<span className="text-xl p-6 py-2" key={username}>{username}</span>
-				))}
+				<span className="text-xl p-6 py-2">Nome: {name}</span>
+				{admin ? (
+					<DragDropContext onDragEnd={handleDrop}>
+						<Droppable droppableId="list-container">
+							{(provided) => (
+								<div
+									className="list-container"
+									{...provided.droppableProps}
+									ref={provided.innerRef}
+								>
+									{users.length > 0 && users.map((user:  {username: string, id: string }) => user.username).map((username: string, index: number) => (
+										<Draggable key={username} draggableId={username} index={index}>
+											{(provided) => (
+												<div
+													className="item-container"
+													ref={provided.innerRef}
+													{...provided.dragHandleProps}
+													{...provided.draggableProps}
+												>
+													{username}
+												</div>
+											)}
+										</Draggable>
+									))}
+									{provided.placeholder}
+								</div>
+							)}
+						</Droppable>
+					</DragDropContext>
+				): (
+						<>
+						{users.length > 0 && users.map(({ username }: { username: string }) => (
+							<span className="text-xl p-6 py-2" key={username}>{username}</span>
+						))}
+						</>
+				)}
 			</div>
 
 			<Message admin={admin} turn={turn} start={start} />
@@ -164,7 +240,8 @@ const Button = ({ socket, roomId, number, admin, handleExit, users }: any) => {
 				{turn && <button ref={buttonRef as RefObject<HTMLButtonElement>} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all" onClick={() => handleStartStop()}>Pausar</button>}
 				{turn && <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all" onClick={() => handleRestartTurn()}>Reiniciar</button>}
 				
-				{!started && admin && <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-all" onClick={() => handleStartTimer()}>Começar</button>}
+				{!started && number === 1 && <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-all" onClick={() => handleStartTimer()}>Começar</button>}
+				{started && admin && <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-all" onClick={() => handleStopTimer()}>Recomeçar</button>}
 
 			</div>
 			<button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-all absolute bottom-6 w-72" onClick={() => handleExit()}>Sair</button>

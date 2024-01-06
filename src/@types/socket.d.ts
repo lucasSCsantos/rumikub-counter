@@ -16,4 +16,4 @@ export interface UsersChangeEventData {
 
 export interface UsersListEventData extends Omit<UserJoinEventData, "invite_id"> {
 	id: string;
-}[]
+}

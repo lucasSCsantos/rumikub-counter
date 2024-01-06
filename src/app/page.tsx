@@ -27,7 +27,7 @@ export default function Home() {
   const [roomId, setRoomId] = useSessionStorage("roomId", "");
   const [username, setUsername] = useSessionStorage("username", "");
   const [showRoom, setShowRoom] = useState(false);
-  const [users, setUsers] = useState<UsersListEventData | []>([]);
+  const [users, setUsers] = useState<UsersListEventData[] | []>([]);
 
   const { socket } = useSocketContext();
   
@@ -77,12 +77,18 @@ export default function Home() {
     });
 
     socket?.on("user_join_error", ({ error }: UserJoinErrorEventData) => {
-      alert(error);
+      // alert(error);
     });
 
-    socket?.on("users_list", (users: UsersListEventData) => {
-      console.log(users);
+    socket?.on("users_list", (users: UsersListEventData[]) => {
       setUsers(users);
+
+      const actualUser = users.find(({ username: un }) => un === username);
+
+      if (actualUser && actualUser?.number !== number) {
+        setNumber(actualUser.number);
+      }
+
     });
 
     socket?.on("users_change", ({ role: newRole, number }: UsersChangeEventData) => {
@@ -123,7 +129,7 @@ export default function Home() {
       </div>
       {showRoom && (
         <div>
-          <Button socket={socket} roomId={roomId} number={number} admin={role === "ADMIN"} handleExit={handleExit} users={users} />
+          <Button socket={socket} roomId={roomId} number={number} admin={role === "ADMIN"} handleExit={handleExit} users={users} setUsers={setUsers} username={username} />
         </div>
       )}
     </div>
