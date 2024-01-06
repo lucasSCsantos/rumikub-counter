@@ -29,7 +29,7 @@ type ButtonRef = {
 }
 
 const renderer: CountdownRendererFn = ({ hours, minutes, seconds }) => {
-	return <span className={`text-white text-9xl`}>{minutes === 1 ? 60 : seconds}</span>;
+	return <span className="text-white text-9xl transition-all">{minutes === 1 ? 60 : seconds}</span>;
 };
 
 const Button = ({ socket, roomId, number, admin, handleExit, users, setUsers, username: name }: any) => {
@@ -102,7 +102,7 @@ const Button = ({ socket, roomId, number, admin, handleExit, users, setUsers, us
 	}
 
 	const handleStopTimer = () => {
-		if (number === 1) {
+		if (admin) {
 			socket.emit("stop", roomId);
 			setStart(false);
 			setTurn(false);
@@ -177,15 +177,13 @@ const Button = ({ socket, roomId, number, admin, handleExit, users, setUsers, us
 			<audio ref={audio2Ref as React.LegacyRef<HTMLAudioElement> | undefined }>
 				<source src='button-click.mp3' type="audio/mp3" />
 			</audio>
-			<div className="top-0 absolute flex flex-col">
-				<span className="text-xl p-6 py-2">Sala: {roomId}</span>
-				<span className="text-xl p-6 py-2">Nome: {name}</span>
-				{admin ? (
+			<div className="top-0 absolute flex flex-row w-full justify-between">
+					{admin ? (
 					<DragDropContext onDragEnd={handleDrop}>
 						<Droppable droppableId="list-container">
 							{(provided) => (
-								<div
-									className="list-container"
+								<ol
+									className="list-decimal list-inside w-fit"
 									{...provided.droppableProps}
 									ref={provided.innerRef}
 								>
@@ -193,31 +191,39 @@ const Button = ({ socket, roomId, number, admin, handleExit, users, setUsers, us
 										<Draggable key={username} draggableId={username} index={index}>
 											{(provided) => (
 												<div
-													className="item-container"
+													className="w-full border-y border-y-gray-200 text-white flex flex-row items-center gap-3 transition-all hover:bg-slate-950 p-2 active:bg-slate-900"
 													ref={provided.innerRef}
 													{...provided.dragHandleProps}
 													{...provided.draggableProps}
 												>
-													{username}
+													<svg className="flex-shrink-0 w-3.5 h-5 text-white" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M4 18L20 18" stroke-width="2"  stroke="currentColor" stroke-linecap="round" />
+														<path d="M4 12L20 12" stroke-width="2" stroke="currentColor" stroke-linecap="round" />
+														<path d="M4 6L20 6" stroke-width="2" stroke="currentColor" stroke-linecap="round" />
+													</svg>
+													Jogador {index + 1}: {username}
 												</div>
 											)}
 										</Draggable>
 									))}
 									{provided.placeholder}
-								</div>
+								</ol>
 							)}
 						</Droppable>
 					</DragDropContext>
 				): (
-						<>
-						{users.length > 0 && users.map(({ username }: { username: string }) => (
-							<span className="text-xl p-6 py-2" key={username}>{username}</span>
-						))}
-						</>
+						<ol>
+							{users.length > 0 && users.map(({ username }: { username: string }, index: number) => (
+								<li className="w-full border-y border-y-gray-200 text-white transition-all p-2 px-4" key={username}>Jogador {index + 1}: {username}</li>
+							))}
+						</ol>
 				)}
+				<div className="flex flex-col">
+					<span className="text-xl p-6 py-2">Sala: {roomId}</span>
+					<span className="text-xl p-6 py-2">Nome: {name}</span>
+				</div>
 			</div>
-
-			<Message admin={admin} turn={turn} start={start} />
+			<Message admin={admin} turn={turn} start={start} number={number} started={started} name={name} />
 			<button disabled={!turn} onClick={(e) => {
 				handleChangeTurn();
 				playButtonAudio();
