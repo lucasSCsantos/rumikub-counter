@@ -149,7 +149,6 @@ const Button = ({ socket, roomId, number, admin, handleExit, users, setUsers, us
 				number: index + 1,
 			}
 		))
-
 		socket.emit("change_order", { roomId, admin, newOrder: updatedList });
 
 		setUsers(updatedList);
@@ -188,7 +187,7 @@ const Button = ({ socket, roomId, number, admin, handleExit, users, setUsers, us
 									ref={provided.innerRef}
 								>
 									{users.length > 0 && users.map((user:  {username: string, id: string }) => user.username).map((username: string, index: number) => (
-										<Draggable key={username} draggableId={username} index={index}>
+										<Draggable key={username} draggableId={username} index={index} isDragDisabled={started}>
 											{(provided) => (
 												<div
 													className="w-full border-y border-y-gray-200 text-white flex flex-row items-center gap-3 transition-all hover:bg-slate-950 p-2 active:bg-slate-900"

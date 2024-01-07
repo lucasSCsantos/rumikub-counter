@@ -38,12 +38,14 @@ export default function Home() {
   }
 
   const handleExit = () => {
+
     setRoomId("");
     setUsername("");
     
     setShowRoom(false);
+    socket?.disconnect();
+    socket?.connect();
 
-    router.refresh();
   }
 
   useEffect(() => {
