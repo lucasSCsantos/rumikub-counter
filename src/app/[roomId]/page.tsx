@@ -16,7 +16,7 @@ export default function Room() {
   const router = useRouter()
 
   var socket: any;
-  socket = io("http://localhost:3002");
+  socket = io("https://turn-timer-server.onrender.com");
 
   //if localstorage have a roomid it emit the join room
 

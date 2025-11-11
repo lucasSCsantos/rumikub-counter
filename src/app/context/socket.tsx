@@ -9,7 +9,7 @@ const SocketContext = createContext<{
 }>({})
 
 export const SocketContextProvider = ({ children }: { children: ReactNode | ReactNode[]}) => {
-	const socket = useSocket("https://turntimerapi.luktech.com.br");
+	const socket = useSocket("https://turn-timer-server.onrender.com");
 
 	return (
 		<SocketContext.Provider value={{ socket }}>
